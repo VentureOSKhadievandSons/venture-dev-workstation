@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: codex-lighthouse https://example.com [output-prefix]"
+  exit 1
+fi
+
+echo "Lighthouse helper will be implemented in a follow-up commit."
+echo "URL: $1"

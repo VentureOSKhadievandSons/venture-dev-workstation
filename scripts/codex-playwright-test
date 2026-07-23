@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+echo "Playwright helper will be implemented in a follow-up commit."

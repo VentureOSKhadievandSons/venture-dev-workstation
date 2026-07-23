@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: codex-browser-test https://example.com"
+  exit 1
+fi
+
+echo "Browser smoke helper will be implemented in a follow-up commit."
+echo "URL: $1"

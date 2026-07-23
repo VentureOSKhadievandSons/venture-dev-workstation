@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+.pnpm-store/
+playwright-report/
+test-results/
+*.log
+*.tmp
+*.swp
+lighthouse-report*
+browser-smoke.png
