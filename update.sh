@@ -32,7 +32,8 @@ if command -v pnpm >/dev/null 2>&1; then
     prettier \
     npm-check-updates \
     serve \
-    autocannon
+    autocannon \
+    vercel
 else
   echo "pnpm not found. Skipping global packages."
 fi

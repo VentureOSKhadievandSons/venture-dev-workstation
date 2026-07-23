@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORKSPACE_DIR="$HOME/.codex-tools/browser-qa"
+LOCAL_BIN_DIR="$HOME/.local/bin"
 
 echo "Preparing Playwright workspace..."
 
@@ -11,6 +13,7 @@ if ! command -v pnpm >/dev/null 2>&1; then
 fi
 
 mkdir -p "$WORKSPACE_DIR/tests" "$WORKSPACE_DIR/scripts"
+mkdir -p "$LOCAL_BIN_DIR"
 
 if [[ ! -f "$WORKSPACE_DIR/package.json" ]]; then
   cat >"$WORKSPACE_DIR/package.json" <<'EOF'
@@ -187,5 +190,10 @@ cd "$WORKSPACE_DIR"
 pnpm install
 pnpm add -D playwright @playwright/test @playwright/mcp axe-playwright
 pnpm exec playwright install chromium firefox webkit
+
+ln -sfn "$REPO_ROOT/scripts/codex-browser-test" "$LOCAL_BIN_DIR/codex-browser-test"
+ln -sfn "$REPO_ROOT/scripts/codex-lighthouse" "$LOCAL_BIN_DIR/codex-lighthouse"
+ln -sfn "$REPO_ROOT/scripts/codex-playwright-test" "$LOCAL_BIN_DIR/codex-playwright-test"
+ln -sfn "$REPO_ROOT/scripts/codex-healthcheck" "$LOCAL_BIN_DIR/codex-healthcheck"
 
 echo "Playwright workspace is ready at $WORKSPACE_DIR."
