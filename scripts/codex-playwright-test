@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "Playwright helper will be implemented in a follow-up commit."
+WORKSPACE_DIR="${CODEX_BROWSER_QA_DIR:-$HOME/.codex-tools/browser-qa}"
+
+if [[ ! -d "$WORKSPACE_DIR" ]]; then
+  echo "Playwright workspace not found at $WORKSPACE_DIR"
+  echo "Run ./install/playwright.sh first."
+  exit 1
+fi
+
+cd "$WORKSPACE_DIR"
+exec pnpm exec playwright test "$@"

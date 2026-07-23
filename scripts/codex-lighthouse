@@ -6,5 +6,11 @@ if [[ $# -lt 1 ]]; then
   exit 1
 fi
 
-echo "Lighthouse helper will be implemented in a follow-up commit."
-echo "URL: $1"
+URL="$1"
+OUTPUT="${2:-lighthouse-report}"
+
+exec lighthouse "$URL" \
+  --output=html \
+  --output=json \
+  --output-path="$OUTPUT" \
+  --chrome-flags="--headless --no-sandbox"

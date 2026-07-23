@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+WORKSPACE_DIR="${CODEX_BROWSER_QA_DIR:-$HOME/.codex-tools/browser-qa}"
+
 if [[ $# -lt 1 ]]; then
   echo "Usage: codex-browser-test https://example.com"
   exit 1
 fi
 
-echo "Browser smoke helper will be implemented in a follow-up commit."
-echo "URL: $1"
+if [[ ! -f "$WORKSPACE_DIR/scripts/browser-smoke.mjs" ]]; then
+  echo "Browser smoke script not found in $WORKSPACE_DIR"
+  echo "Run ./install/playwright.sh first."
+  exit 1
+fi
+
+cd "$WORKSPACE_DIR"
+exec node scripts/browser-smoke.mjs "$1"
