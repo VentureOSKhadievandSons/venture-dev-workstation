@@ -21,6 +21,17 @@ chmod +x bootstrap.sh verify.sh update.sh install/*.sh scripts/*
 ./update.sh
 ```
 
+## Daily helpers
+
+After `./bootstrap.sh`, these commands should be available from `~/.local/bin`:
+
+```bash
+codex-browser-test https://turkey-real-estate-site.vercel.app/ru/
+TEST_URL=https://turkey-real-estate-site.vercel.app/ru/ codex-playwright-test
+codex-lighthouse https://turkey-real-estate-site.vercel.app/ru/
+codex-healthcheck
+```
+
 ## Repository layout
 
 - `bootstrap.sh`: runs each installer in sequence
@@ -36,3 +47,4 @@ chmod +x bootstrap.sh verify.sh update.sh install/*.sh scripts/*
 - These scripts only change local workstation state.
 - No project repositories are modified.
 - Review each installer before running on a new machine if you want to trim the default toolset.
+- Sample Cursor files live in `cursor/` and can be copied into `~/.cursor/` manually.
