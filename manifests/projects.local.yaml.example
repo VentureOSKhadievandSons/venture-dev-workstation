@@ -1,0 +1,12 @@
+# Copy this example into a private overlay repository or a local/iCloud path
+# outside this public repository, then point scripts/clone-projects at it.
+- name: example-private-app
+  repository: https://github.com/example/example-private-app.git
+  local_path: ~/Workspace/example-private-app
+  stack:
+    - web
+    - pnpm
+  bootstrap_command: pnpm install
+  verification_command: pnpm test
+  required_external_services:
+    - static-hosting

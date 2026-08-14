@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/scripts/lib/common.sh"
+
+MANIFEST_FILE="${PROJECTS_MANIFEST:-$PRIVATE_OVERLAY_MANIFEST_PATH}"
+DRY_RUN=1
+
+usage() {
+	cat <<'EOF'
+Usage: scripts/clone-projects [--apply] [--manifest PATH]
+
+Reads a private manifest outside this repository by default.
+Dry-run is the default. Use --apply for real cloning.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--apply)
+		DRY_RUN=0
+		shift
+		;;
+	--manifest)
+		MANIFEST_FILE="$2"
+		shift 2
+		;;
+	--help | -h)
+		usage
+		exit 0
+		;;
+	*)
+		echo "Unknown argument: $1" >&2
+		usage >&2
+		exit 1
+		;;
+	esac
+done
+
+[[ -f "$MANIFEST_FILE" ]] || {
+	echo "Manifest not found: $MANIFEST_FILE" >&2
+	exit 1
+}
+
+python3 - "$MANIFEST_FILE" "$DRY_RUN" <<'PY'
+import pathlib
+import subprocess
+import sys
+
+try:
+    import yaml
+except ImportError as exc:
+    raise SystemExit("PyYAML is required. Run `uv tool install pyyaml` or use system Python with PyYAML.") from exc
+
+manifest_path = pathlib.Path(sys.argv[1])
+dry_run = sys.argv[2] == "1"
+data = yaml.safe_load(manifest_path.read_text()) or []
+
+for item in data:
+    repo = item.get("repository")
+    local_path = pathlib.Path(item.get("local_path", "")).expanduser()
+    if not repo or not local_path:
+        print(f"Skipping invalid item: {item}", file=sys.stderr)
+        continue
+
+    if local_path.exists():
+        print(f"skip existing {local_path}")
+        continue
+
+    print(f"clone {repo} -> {local_path}")
+    if not dry_run:
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "clone", repo, str(local_path)], check=True)
+PY

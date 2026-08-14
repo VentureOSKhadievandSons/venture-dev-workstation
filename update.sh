@@ -2,51 +2,43 @@
 set -Eeuo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLAYWRIGHT_DIR="$HOME/.codex-tools/browser-qa"
+source "$ROOT_DIR/scripts/lib/common.sh"
 
-echo "Updating Homebrew..."
-if command -v brew >/dev/null 2>&1; then
-  brew update
-  brew upgrade
-else
-  echo "Homebrew not found. Skipping."
+echo "Updating workstation packages..."
+
+ensure_brew
+brew update
+brew bundle install --file "$BREWFILE_PATH" --no-lock
+
+ensure_local_bin_path
+
+if command_exists corepack; then
+	corepack enable
 fi
 
-echo
-echo "Updating pnpm..."
-if command -v pnpm >/dev/null 2>&1; then
-  pnpm self-update || true
-else
-  echo "pnpm not found. Skipping."
+if command_exists pnpm; then
+	pnpm add -g \
+		@openai/codex \
+		@lhci/cli \
+		eslint \
+		lighthouse \
+		npm-check-updates \
+		prettier \
+		tsx \
+		typescript \
+		vercel
 fi
 
-echo
-echo "Updating global Node packages..."
-if command -v pnpm >/dev/null 2>&1; then
-  pnpm add -g \
-    lighthouse \
-    @lhci/cli \
-    typescript \
-    tsx \
-    eslint \
-    prettier \
-    npm-check-updates \
-    serve \
-    autocannon \
-    vercel
-else
-  echo "pnpm not found. Skipping global packages."
+if [[ -d "$PLAYWRIGHT_DIR" ]] && command_exists pnpm; then
+	(
+		cd "$PLAYWRIGHT_DIR"
+		pnpm install --frozen-lockfile=false
+		pnpm exec playwright install chromium firefox webkit
+	)
 fi
 
-echo
-echo "Updating Playwright workspace..."
-if [[ -d "$PLAYWRIGHT_DIR" ]] && command -v pnpm >/dev/null 2>&1; then
-  cd "$PLAYWRIGHT_DIR"
-  pnpm add -D playwright @playwright/test @playwright/mcp axe-playwright
-  pnpm exec playwright install chromium firefox webkit
-else
-  echo "Playwright workspace not found. Skipping."
+if command_exists gitleaks; then
+	gitleaks version >/dev/null
 fi
 
-echo
 echo "Update finished."

@@ -1,52 +1,31 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-PNPM_HOME_DIR="$HOME/Library/pnpm/bin"
-ZSHENV_FILE="$HOME/.zshenv"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/scripts/lib/common.sh"
 
-append_line_if_missing() {
-  local file="$1"
-  local line="$2"
+log "Configuring Node.js toolchain..."
+ensure_local_bin_path
 
-  touch "$file"
+command_exists node || die "node is missing after Brewfile install."
+command_exists npm || die "npm is missing after Brewfile install."
 
-  if ! grep -Fqx "$line" "$file"; then
-    echo "$line" >>"$file"
-  fi
-}
-
-echo "Installing Node.js and pnpm..."
-
-if ! command -v brew >/dev/null 2>&1; then
-  echo "Homebrew is required. Run install/homebrew.sh first."
-  exit 1
+if command_exists corepack; then
+	corepack enable
 fi
 
-brew install node pnpm
-
-mkdir -p "$PNPM_HOME_DIR" "$HOME/.local/bin"
-
-append_line_if_missing "$ZSHENV_FILE" 'export PNPM_HOME="$HOME/Library/pnpm/bin"'
-append_line_if_missing "$ZSHENV_FILE" 'export PATH="$PNPM_HOME:$HOME/.local/bin:$PATH"'
-
-export PNPM_HOME="$PNPM_HOME_DIR"
-export PATH="$PNPM_HOME:$HOME/.local/bin:$PATH"
-
-if ! pnpm bin -g >/dev/null 2>&1; then
-  echo "Running pnpm setup..."
-  SHELL="${SHELL:-/bin/zsh}" pnpm setup
+if ! command_exists pnpm; then
+	npm install -g pnpm
 fi
 
-echo "Installing global Node tools..."
 pnpm add -g \
-  lighthouse \
-  @lhci/cli \
-  typescript \
-  tsx \
-  eslint \
-  prettier \
-  npm-check-updates \
-  serve \
-  autocannon
+	@lhci/cli \
+	eslint \
+	lighthouse \
+	npm-check-updates \
+	prettier \
+	tsx \
+	typescript
 
-echo "Node.js and pnpm setup finished."
+log "Node.js: $(node --version)"
+log "pnpm: $(pnpm --version)"

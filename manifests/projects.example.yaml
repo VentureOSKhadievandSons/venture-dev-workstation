@@ -1,0 +1,26 @@
+- name: example-web-app
+  repository: https://github.com/example/example-web-app.git
+  local_path: ~/Workspace/example-web-app
+  stack:
+    - web
+    - pnpm
+    - static-hosting
+  bootstrap_command: pnpm install
+  verification_command: pnpm test
+  required_external_services:
+    - static-hosting
+
+- name: example-api-service
+  repository: https://github.com/example/example-api-service.git
+  local_path: ~/Workspace/example-api-service
+  stack:
+    - api
+    - uv
+    - postgresql
+    - redis
+    - containers
+  bootstrap_command: uv sync
+  verification_command: uv run pytest -q
+  required_external_services:
+    - postgresql
+    - redis

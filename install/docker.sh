@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "Installing Docker Desktop..."
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/scripts/lib/common.sh"
 
-if ! command -v brew >/dev/null 2>&1; then
-  echo "Homebrew is required. Run install/homebrew.sh first."
-  exit 1
-fi
+log "Checking Docker Desktop..."
 
 if [[ -d "/Applications/Docker.app" ]]; then
-  echo "Docker Desktop is already installed."
-  exit 0
+	log "Docker Desktop is installed."
+else
+	warn "Docker Desktop is not installed yet. Brewfile includes the official cask."
 fi
 
-brew install --cask docker
-
-echo "Docker setup finished."
+if command_exists docker; then
+	docker --version
+else
+	warn "docker CLI is not available until Docker Desktop finishes installation."
+fi

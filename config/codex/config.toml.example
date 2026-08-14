@@ -1,0 +1,15 @@
+model = "gpt-5"
+model_reasoning_effort = "high"
+web_search = "live"
+
+[features]
+js_repl = false
+
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+followUpQueueMode = "queue"
+
+# Add only public-safe MCP examples here.
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
