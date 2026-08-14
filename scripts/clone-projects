@@ -2,14 +2,16 @@
 set -Eeuo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MANIFEST_FILE="${PROJECTS_MANIFEST:-$ROOT_DIR/manifests/projects.local.yaml}"
+source "$ROOT_DIR/scripts/lib/common.sh"
+
+MANIFEST_FILE="${PROJECTS_MANIFEST:-$PRIVATE_OVERLAY_MANIFEST_PATH}"
 DRY_RUN=1
 
 usage() {
 	cat <<'EOF'
 Usage: scripts/clone-projects [--apply] [--manifest PATH]
 
-Reads manifests/projects.local.yaml by default.
+Reads a private manifest outside this repository by default.
 Dry-run is the default. Use --apply for real cloning.
 EOF
 }

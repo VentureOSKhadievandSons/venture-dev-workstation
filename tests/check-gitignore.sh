@@ -16,6 +16,7 @@ required_patterns=(
 	"id_ed25519*"
 	".vercel/"
 	"manifests/projects.local.yaml"
+	"manifests/*.local.yaml"
 	".local/"
 )
 
@@ -25,3 +26,8 @@ for pattern in "${required_patterns[@]}"; do
 		exit 1
 	}
 done
+
+if git ls-files --error-unmatch manifests/projects.local.yaml >/dev/null 2>&1; then
+	echo "manifests/projects.local.yaml must never be tracked" >&2
+	exit 1
+fi

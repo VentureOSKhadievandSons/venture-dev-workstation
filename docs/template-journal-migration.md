@@ -34,5 +34,5 @@
 
 1. Export safe config with `./export-safe-config.sh --apply --confirm`.
 2. Review every staged file manually.
-3. Move internal prompt/template collections into a private repository or another private knowledge store.
+3. Move internal prompt/template collections into a private overlay repository or another private knowledge store.
 4. Reconnect public-safe snippets and templates on the new Mac only after review.

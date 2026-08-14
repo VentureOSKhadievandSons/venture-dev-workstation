@@ -1,24 +1,24 @@
-- name: example-next-app
-  repository: https://github.com/example/example-next-app.git
-  local_path: ~/Developer/example-next-app
+- name: example-web-app
+  repository: https://github.com/example/example-web-app.git
+  local_path: ~/Workspace/example-web-app
   stack:
-    - nextjs
+    - web
     - pnpm
-    - vercel
+    - static-hosting
   bootstrap_command: pnpm install
   verification_command: pnpm test
   required_external_services:
-    - vercel
+    - static-hosting
 
-- name: example-fastapi-service
-  repository: https://github.com/example/example-fastapi-service.git
-  local_path: ~/Developer/example-fastapi-service
+- name: example-api-service
+  repository: https://github.com/example/example-api-service.git
+  local_path: ~/Workspace/example-api-service
   stack:
-    - fastapi
+    - api
     - uv
     - postgresql
     - redis
-    - docker-compose
+    - containers
   bootstrap_command: uv sync
   verification_command: uv run pytest -q
   required_external_services:

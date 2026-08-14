@@ -43,6 +43,7 @@ vercel --version
 ```
 
 Review the staged output before you commit or move anything.
+Do not commit exported configuration, project manifests, credentials, or migration archives.
 
 ## Do not export through this repository
 

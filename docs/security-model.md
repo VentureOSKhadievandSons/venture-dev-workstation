@@ -9,7 +9,7 @@ This is a public migration repository. It automates reproducible setup and holds
 - declarative package manifests
 - shell scripts
 - sanitized editor and Codex examples
-- project manifest examples
+- fictional manifest examples
 - migration documentation
 
 ## Not allowed in Git
@@ -27,9 +27,11 @@ This is a public migration repository. It automates reproducible setup and holds
 
 - `export-safe-config.sh` is dry-run by default.
 - It stages files only into `./.local/export-safe-config`.
+- It refuses to write if the staging directory is not ignored or if any `.local` content is tracked by Git.
 - Sanitization redacts `$HOME`-style paths.
 - Secret scanning runs before a text artifact is retained.
 - `restore-safe-config.sh` is dry-run by default, shows diffs, and creates backups before overwrite.
+- Do not commit exported configuration, project manifests, credentials, or migration archives.
 
 ## Authentication model
 

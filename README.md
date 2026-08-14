@@ -7,6 +7,7 @@ Declarative, repeatable workstation setup for migrating from an existing Apple S
 - Never commit passwords, API keys, tokens, cookies, `.env` files, auth stores, private SSH keys, database dumps, or local session history.
 - This repository only stores public-safe examples and automation.
 - Account login, keychain items, SSH private keys, Vercel project links, `.vercel`, and Codex auth state are re-created manually on the new Mac.
+- Do not commit exported configuration, project manifests, credentials, or migration archives.
 
 ## Repository layout
 
@@ -19,7 +20,7 @@ Declarative, repeatable workstation setup for migrating from an existing Apple S
 - `restore-safe-config.sh`: previews and restores only safe config artifacts.
 - `install/`: idempotent installers for Homebrew, Python, Node, GitHub, Codex, Vercel, Docker, databases, and Playwright.
 - `config/`: sanitized example config for Codex, Cursor, and VS Code.
-- `manifests/`: project manifest examples and local-only manifest template.
+- `manifests/`: fictional manifest examples only.
 - `scripts/`: helper commands and validation utilities.
 - `tests/`: repository structure and policy checks.
 - `docs/`: migration playbooks and troubleshooting.
@@ -32,7 +33,7 @@ Declarative, repeatable workstation setup for migrating from an existing Apple S
 2. Review `docs/old-mac-preparation.md`.
 3. Run `./export-safe-config.sh --apply --confirm`.
 4. Review staged artifacts in `./.local/export-safe-config`.
-5. Verify critical projects before migration.
+5. Verify critical repositories before migration.
 6. Push this repository after reviewing changes.
 
 ### Stage B: new MacBook Pro
@@ -43,15 +44,15 @@ Declarative, repeatable workstation setup for migrating from an existing Apple S
 4. Run `./bootstrap.sh`.
 5. Re-authenticate GitHub, Codex, Vercel, Docker, browsers, and other apps.
 6. Restore reviewed safe config with `./restore-safe-config.sh --apply --force`.
-7. Create `manifests/projects.local.yaml` from the example and clone projects.
+7. Point `scripts/clone-projects` at a private overlay manifest stored outside this repository.
 8. Run `./verify.sh`.
-9. Smoke-test the highest priority projects.
+9. Smoke-test the highest priority repositories.
 
 ## Quick start on a new Mac
 
 ```bash
-git clone https://github.com/VentureOSKhadievandSons/venture-dev-workstation.git
-cd venture-dev-workstation
+git clone <PUBLIC_REPO_URL>
+cd <PUBLIC_REPO_DIR>
 chmod +x \
   bootstrap.sh \
   preflight.sh \
@@ -79,6 +80,7 @@ chmod +x \
 - Cursor or VS Code history, workspace storage, chat databases, OAuth state.
 - `.env` files, `.vercel`, local secrets, cookies, SSH private keys, or database dumps.
 - Project-specific dependencies better kept in each project’s `package.json` or `pyproject.toml`.
+- Real project manifests, private overlays, and migration archives belong outside this repository.
 
 ## Daily helpers
 
@@ -99,6 +101,7 @@ codex-healthcheck
 
 ## Documentation
 
+Public base:
 - [Migration checklist](docs/migration-checklist.md)
 - [Old Mac preparation](docs/old-mac-preparation.md)
 - [New Mac bootstrap](docs/new-mac-bootstrap.md)
@@ -107,3 +110,9 @@ codex-healthcheck
 - [Template journal migration](docs/template-journal-migration.md)
 - [Security model](docs/security-model.md)
 - [Troubleshooting](docs/troubleshooting.md)
+
+Private overlay:
+- [Private overlay model](docs/private-overlay.md)
+
+Apple Migration Assistant / Time Machine / iCloud:
+- [Apple migration options](docs/apple-migration-options.md)

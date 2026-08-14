@@ -49,3 +49,9 @@
 - Run `scripts/check-no-secrets`.
 - Remove or redact offending content before commit.
 - Never suppress a real credential finding inside this public repository.
+
+## Project manifest location is wrong
+
+- Keep real project manifests outside this repository.
+- Use a private overlay repository or a local/iCloud path such as `~/.config/workstation-private/projects.local.yaml`.
+- Re-run `scripts/clone-projects --manifest <PRIVATE_MANIFEST_PATH>`.

@@ -23,7 +23,10 @@ required=(
 	"docs/post-migration-verification.md"
 	"docs/manual-authentication.md"
 	"docs/template-journal-migration.md"
+	"docs/private-overlay.md"
+	"docs/apple-migration-options.md"
 	"docs/security-model.md"
+	"tests/check-public-surface.sh"
 )
 
 for path in "${required[@]}"; do

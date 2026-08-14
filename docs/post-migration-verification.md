@@ -20,9 +20,9 @@ Check for:
 
 ## Project smoke tests
 
-- Next.js and Vercel projects: install deps, run dev/build/test flows, verify browser QA.
-- FastAPI projects: `uv sync`, run unit tests, confirm PostgreSQL and Redis connectivity.
-- Dockerized services: `docker compose up` for local stacks only.
+- For each repository in your private overlay, run the repository's own install, test, and local run commands.
+- Confirm any local services required by those repositories start against local-only data.
+- Verify browser QA only against approved non-production targets.
 
 ## If something fails
 

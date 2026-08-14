@@ -14,7 +14,33 @@ Usage: ./export-safe-config.sh [--apply] [--confirm]
 Dry-run is the default. The script stages sanitized config into ./.local/export-safe-config
 and writes a manifest with SHA-256 checksums. It never exports auth.json, tokens, logs,
 sessions, caches, database dumps, or private keys.
+Do not commit exported configuration, project manifests, credentials, or migration archives.
 EOF
+}
+
+assert_export_stage_is_local_only() {
+	local tracked_entries
+
+	[[ "$EXPORT_STAGE_DIR" == "$ROOT_DIR/.local/export-safe-config" ]] || {
+		die "EXPORT_STAGE_DIR must stay at $ROOT_DIR/.local/export-safe-config"
+	}
+
+	git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+		die "This script must run inside the workstation Git repository."
+	}
+
+	tracked_entries="$(git -C "$ROOT_DIR" ls-files -- .local)"
+	[[ -z "$tracked_entries" ]] || {
+		die ".local contains tracked files. Refusing to write exported configuration."
+	}
+
+	git -C "$ROOT_DIR" check-ignore -q -- .local || {
+		die ".local is not ignored by Git. Refusing to write exported configuration."
+	}
+
+	git -C "$ROOT_DIR" check-ignore -q -- .local/export-safe-config || {
+		die ".local/export-safe-config is not ignored by Git. Refusing to write exported configuration."
+	}
 }
 
 sanitize_codex_config() {
@@ -91,6 +117,9 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+assert_export_stage_is_local_only
+warn "Do not commit exported configuration, project manifests, credentials, or migration archives."
 
 if ((DRY_RUN == 0)); then
 	((CONFIRM == 1)) || die "Refusing to write export staging without --confirm."
