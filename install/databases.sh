@@ -1,29 +1,19 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "Installing PostgreSQL and Redis..."
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$ROOT_DIR/scripts/lib/common.sh"
 
-if ! command -v brew >/dev/null 2>&1; then
-  echo "Homebrew is required. Run install/homebrew.sh first."
-  exit 1
-fi
+log "Checking PostgreSQL and Redis..."
+command_exists psql || die "psql is missing after Brewfile install."
+command_exists redis-cli || die "redis-cli is missing after Brewfile install."
 
-if ! command -v psql >/dev/null 2>&1; then
-  brew install postgresql@17
+if [[ "${ENABLE_BREW_SERVICES:-1}" == "1" ]]; then
+	brew services start postgresql@17
+	brew services start redis
 else
-  echo "PostgreSQL command is already available."
+	warn "Skipping brew services start. Set ENABLE_BREW_SERVICES=1 to enable."
 fi
 
-if ! brew list redis >/dev/null 2>&1; then
-  brew install redis
-else
-  echo "Redis is already installed."
-fi
-
-if brew list postgresql@17 >/dev/null 2>&1; then
-  brew services start postgresql@17
-fi
-
-brew services start redis
-
-echo "Database setup finished."
+psql --version
+redis-cli --version

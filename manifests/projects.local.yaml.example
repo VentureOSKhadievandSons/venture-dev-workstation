@@ -1,0 +1,10 @@
+- name: private-project
+  repository: https://github.com/your-org/private-project.git
+  local_path: ~/Developer/private-project
+  stack:
+    - nextjs
+    - pnpm
+  bootstrap_command: pnpm install
+  verification_command: pnpm test
+  required_external_services:
+    - vercel

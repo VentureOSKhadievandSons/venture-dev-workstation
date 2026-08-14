@@ -1,0 +1,26 @@
+- name: example-next-app
+  repository: https://github.com/example/example-next-app.git
+  local_path: ~/Developer/example-next-app
+  stack:
+    - nextjs
+    - pnpm
+    - vercel
+  bootstrap_command: pnpm install
+  verification_command: pnpm test
+  required_external_services:
+    - vercel
+
+- name: example-fastapi-service
+  repository: https://github.com/example/example-fastapi-service.git
+  local_path: ~/Developer/example-fastapi-service
+  stack:
+    - fastapi
+    - uv
+    - postgresql
+    - redis
+    - docker-compose
+  bootstrap_command: uv sync
+  verification_command: uv run pytest -q
+  required_external_services:
+    - postgresql
+    - redis
